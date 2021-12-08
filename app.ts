@@ -1,18 +1,31 @@
-interface User {
-	login: string;
-	password?: string;
+function logId(id: string | number): void {
+	console.log(id);
 }
 
-const user: User = {
-	login: 'a@a.ru',
-	password: '1'
-}
+const a = logId(1);
 
-function multiply(first: number, second?: number): number {
-	if (!second) {
-		return first * first;
+function multiply(f: number, s?: number) {
+	if (!s) {
+		return f * f;
 	}
-	return first * second;
 }
 
-multiply(5)
+type voidFunc = () => void;
+
+const f1: voidFunc = () => {
+
+}
+
+const f2: voidFunc = () => {
+	return true
+}
+
+const b = f2();
+
+const skills = ['Dev', 'DevOps'];
+
+const user = {
+	s: ['s']
+}
+
+skills.forEach((skill) => user.s.push(skill));
