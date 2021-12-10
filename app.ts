@@ -1,37 +1,39 @@
-let input: unknown;
+function genereateError(message: string): never {
+	throw new Error(message);
+}
 
-input = 3;
-input = ['sf', 'sdf'];
+function dumpError(): never {
+	while (true) { }
+}
 
-function run(i: unknown) {
-	if (typeof i == 'number') {
-		i++;
-	} else {
-		i
+function rec(): never {
+	return rec();
+}
+
+type paymentAction = 'refund' | 'checkout' | 'reject';
+
+function processAction(action: paymentAction) {
+	switch (action) {
+		case 'refund':
+			//...
+			break;
+		case 'checkout':
+			// ...
+			break;
+		case 'reject':
+			// ...
+			break;
+		default:
+			const _: never = action;
+			throw new Error('Нет такого action');
 	}
 }
 
-run(input);
-
-async function getData() {
-	try {
-		await fetch('');
-	} catch (error) {
-		if (error instanceof Error) {
-			console.log(error.message);
-		}
+function isString(x: string | number): boolean {
+	if (typeof x === 'string') {
+		return true;
+	} else if (typeof x === 'number') {
+		return false;
 	}
+	genereateError('sdfsdf');
 }
-
-async function getDataForce() {
-	try {
-		await fetch('');
-	} catch (error) {
-		const e = error as Error;
-		console.log(e.message);
-	}
-}
-
-type U1 = unknown | number;
-
-type I1 = unknown & string;
