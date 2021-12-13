@@ -1,25 +1,36 @@
-const n: null = null;
-const n1: any = null;
-const n2: number = null;
-const n3: string = null;
-const n4: boolean = null;
-const n5: undefined = null;
+let a = 5;
+let b: string = a.toString()
+let e: string = new String(a).valueOf()
+let f: boolean = new Boolean(a).valueOf()
+
+let c = 'sdfs';
+let d: number = parseInt(c);
 
 interface User {
 	name: string;
+	email: string;
+	login: string;
 }
 
-function getUser() {
-	if (Math.random() > 0.5) {
-		return null;
-	} else {
-		return {
-			name: 'Вася'
-		} as User
+const user: User = {
+	name: 'Вася',
+	email: 'vasiliy@yandex.ru',
+	login: 'vasia'
+}
+
+interface Admin {
+	name: string;
+	role: number;
+}
+
+const admin: Admin = {
+	...user,
+	role: 1
+}
+
+function userToAdmin(user: User): Admin {
+	return {
+		name: user.login,
+		role: 1
 	}
-}
-
-const user = getUser();
-if (user) {
-	const n55 = user.name;
 }
