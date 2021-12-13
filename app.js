@@ -1,7 +1,11 @@
 "use strict";
-function fetchWithAuth(url, method) {
-    return 1;
-}
-fetchWithAuth('s', 'post');
-let method = 'post';
-fetchWithAuth('s', method);
+var User = /** @class */ (function () {
+    function User(name) {
+        this.name = name;
+    }
+    return User;
+}());
+var user = new User('Вася');
+console.log(user);
+user.name = 'Петя';
+console.log(user);
