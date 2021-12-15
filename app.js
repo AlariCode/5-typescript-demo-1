@@ -1,11 +1,18 @@
 "use strict";
-var User = /** @class */ (function () {
-    function User(name) {
-        this.name = name;
+class User {
+    constructor(ageOrName, age) {
+        if (typeof ageOrName === 'string') {
+            this.name = ageOrName;
+        }
+        else if (typeof ageOrName === 'number') {
+            this.age = ageOrName;
+        }
+        if (typeof age === 'number') {
+            this.age = age;
+        }
     }
-    return User;
-}());
-var user = new User('Вася');
-console.log(user);
-user.name = 'Петя';
-console.log(user);
+}
+const user = new User('Вася');
+const user2 = new User();
+const user3 = new User(33);
+const user4 = new User('Вася', 33);
