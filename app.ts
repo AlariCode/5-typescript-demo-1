@@ -1,34 +1,27 @@
-enum PaymentStatus {
-	Holded,
-	Processed,
-	Reversed
+class User {
+	_login: string;
+	password: string;
+	createdAt: Date;
+
+	set login(l: string | number) {
+		this._login = 'user-' + l;
+		this.createdAt = new Date();
+	}
+
+	get login() {
+		return this._login;
+	}
+
+	async getPassword(p: string) {
+
+	}
+
+	// set password(p: string) {
+	// 	// sync
+	// }
 }
 
-class Payment {
-	id: number;
-	status: PaymentStatus = PaymentStatus.Holded;
-	createdAt: Date = new Date();
-	updatedAt: Date;
-
-	constructor(id: number) {
-		this.id = id;
-	}
-
-	getPaymentLifeTime(): number {
-		return new Date().getTime() - this.createdAt.getTime();
-	}
-
-	unholdPayment(): void {
-		if (this.status == PaymentStatus.Processed) {
-			throw new Error('Платёж не может быть возвращен!');
-		}
-		this.status = PaymentStatus.Reversed;
-		this.updatedAt = new Date();
-	}
-}
-
-const payment = new Payment(1);
-payment.unholdPayment();
-console.log(payment);
-const time = payment.getPaymentLifeTime();
-console.log(time);
+const user = new User();
+user.login = 'myLogin';
+console.log(user);
+console.log(user.login);
