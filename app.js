@@ -1,32 +1,27 @@
 "use strict";
-var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
-    if (kind === "m") throw new TypeError("Private method is not writable");
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
-    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
-};
-var _Vehicle_price;
-class Vehicle {
+class Payment {
     constructor() {
-        _Vehicle_price.set(this, void 0);
+        this.date = new Date();
+        this.getDateArrow = () => {
+            return this.date;
+        };
     }
-    set model(m) {
-        this._model = m;
-        __classPrivateFieldSet(this, _Vehicle_price, 100, "f");
-    }
-    get model() {
-        return this._model;
-    }
-    addDamage(damage) {
-        this.damages.push(damage);
+    getDate() {
+        return this.date;
     }
 }
-_Vehicle_price = new WeakMap();
-class EuroTruck extends Vehicle {
-    setRun(km) {
-        this.run = km / 0.62;
-        // this.damages - error
+const p = new Payment();
+const user = {
+    id: 1,
+    paymentDate: p.getDate.bind(p),
+    paymentDateArrow: p.getDateArrow
+};
+// console.log(p.getDate());
+// console.log(user.paymentDate());
+// console.log(user.paymentDateArrow());
+class PaymentPersistent extends Payment {
+    save() {
+        return this.getDateArrow();
     }
 }
-new Vehicle();
-new EuroTruck();
+console.log(new PaymentPersistent().save());

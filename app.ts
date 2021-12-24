@@ -1,23 +1,31 @@
-class UserService {
-	// static name: string = 'sdf';
-	private static db: any;
+class Payment {
+	private date: Date = new Date();
 
-	static getUser(id: number) {
-		return UserService.db.findById(id);
+	getDate(this: Payment) {
+		return this.date;
 	}
 
-	constructor(id: number) { }
-
-	create() {
-		UserService.db;
-	}
-
-	static {
-		UserService.db = 'sdf';
+	getDateArrow = () => {
+		return this.date;
 	}
 }
 
-UserService.getUser(1)
-const inst = new UserService(1);
-inst.create();
+const p = new Payment();
 
+const user = {
+	id: 1,
+	paymentDate: p.getDate.bind(p),
+	paymentDateArrow: p.getDateArrow
+}
+
+// console.log(p.getDate());
+// console.log(user.paymentDate());
+// console.log(user.paymentDateArrow());
+
+class PaymentPersistent extends Payment {
+	save() {
+		return this.getDateArrow();
+	}
+}
+
+console.log(new PaymentPersistent().save());
