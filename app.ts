@@ -1,30 +1,23 @@
-class Vehicle {
-	public make: string;
-	private damages: string[];
-	private _model: string;
-	protected run: number;
-	#price: number;
+class UserService {
+	// static name: string = 'sdf';
+	private static db: any;
 
-	set model(m: string) {
-		this._model = m;
-		this.#price = 100;
+	static getUser(id: number) {
+		return UserService.db.findById(id);
 	}
 
-	get model() {
-		return this._model;
+	constructor(id: number) { }
+
+	create() {
+		UserService.db;
 	}
 
-	addDamage(damage: string) {
-		this.damages.push(damage);
+	static {
+		UserService.db = 'sdf';
 	}
 }
 
-class EuroTruck extends Vehicle {
-	setRun(km: number) {
-		this.run = km / 0.62;
-		// this.damages - error
-	}
-}
+UserService.getUser(1)
+const inst = new UserService(1);
+inst.create();
 
-new Vehicle()
-new EuroTruck()
