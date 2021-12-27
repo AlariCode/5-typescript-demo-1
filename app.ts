@@ -9,6 +9,7 @@ abstract class Contoller {
 }
 
 class UserController extends Contoller {
+	db: any;
 	handle(req: any): void {
 		console.log(req);
 	}
@@ -17,3 +18,4 @@ class UserController extends Contoller {
 
 const c = new UserController();
 c.handleWithLogs('Request');
+Math.random();
