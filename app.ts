@@ -14,6 +14,6 @@ class UserController extends Contoller {
 	}
 }
 
-// new Contoller() - error
+
 const c = new UserController();
 c.handleWithLogs('Request');
