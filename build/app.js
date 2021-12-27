@@ -7,15 +7,6 @@ class Contoller {
     }
 }
 class UserController extends Contoller {
-    constructor() {
-        super(...arguments);
-        Object.defineProperty(this, "db", {
-            enumerable: true,
-            configurable: true,
-            writable: true,
-            value: void 0
-        });
-    }
     handle(req) {
         console.log(req);
     }
