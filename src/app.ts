@@ -1,21 +1,25 @@
-abstract class Contoller {
-	abstract handle(req: any): void;
+function test(a: number): number {
+	return a;
+}
 
-	handleWithLogs(req: any) {
-		console.log('Start');
-		this.handle(req);
-		console.log('End');
+type StrOrNumFunc = (a: number | string) => number;
+
+// let f: StrOrNumFunc = test;
+
+// test.apply(undefined, [1, 3]);
+
+class A {
+	b: number;
+
+	test() {
+		return function () {
+			// this.b = 5;
+		}
 	}
 }
 
-class UserController extends Contoller {
-	db: any;
-	handle(req: any): void {
-		console.log(req);
-	}
+try {
+
+} catch (e) {
+	// console.log(e.message);
 }
-
-
-const c = new UserController();
-c.handleWithLogs('Request');
-Math.random();
