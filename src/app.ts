@@ -1,25 +1,35 @@
-function test(a: number): number {
-	return a;
+class User {
+	role?: 'admin' | 'user';
+
+	constructor(private name: string) {
+	}
+
+	login(): void { }
 }
 
-type StrOrNumFunc = (a: number | string) => number;
+function createUser(user: User) {
+	// логика
+	const defaultUser = new User('defauilt');
+	defaultUser.role = undefined;
 
-// let f: StrOrNumFunc = test;
-
-// test.apply(undefined, [1, 3]);
-
-class A {
-	b: number;
-
-	test() {
-		return function () {
-			// this.b = 5;
-		}
+	switch (user.role) {
+		case 'admin':
+			const a = 7;
+		case 'user':
+			return true;
+			const c = 1;
 	}
 }
 
-try {
+interface IChecks {
+	[check: string]: boolean;
+}
+const c: IChecks = { kpp: true };
+const d = c['drive'];
+c.drive
 
-} catch (e) {
-	// console.log(e.message);
+class VipUser extends User {
+	override login(): void {
+
+	}
 }
