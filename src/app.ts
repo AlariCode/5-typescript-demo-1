@@ -1,19 +1,13 @@
-interface IUser {
-	name: string;
-	age: number;
+let strOrNum: string | number;
+
+if (Math.random() > 0.5) {
+	strOrNum = 5;
+} else {
+	strOrNum = 'str';
 }
 
-type KeysOfUser = keyof IUser;
-
-const key: KeysOfUser = 'age';
-
-function getValue<T, K extends keyof T>(obj: T, key: K) {
-	return obj[key];
+if (typeof strOrNum === 'string') {
+	console.log(strOrNum);
+} else {
+	console.log(strOrNum);
 }
-
-const user: IUser = {
-	name: 'Вася',
-	age: 30
-};
-
-const userName = getValue(user, 'name');
