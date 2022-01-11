@@ -1,20 +1,17 @@
-type Modifier = 'read' | 'update' | 'create';
+type ReadOrWrite = 'read' | 'write';
 
-type UserRoles = {
-	customers?: Modifier,
-	projects?: Modifier,
-	adminPanel?: Modifier,
+type Access = `can${Capitalize<ReadOrWrite>}`;
+
+type ReadOrWriteBulk<T> = T extends `can${infer R}` ? R : never;
+
+type T = ReadOrWriteBulk<Access>;
+
+type ErrorOrSuccess = 'error' | 'success';
+
+type ResponseT = {
+	result: `http${Capitalize<ErrorOrSuccess>}`
 }
 
-type ModifierToAccess<Type> = {
-	+readonly [Property in keyof Type as Exclude<`canAccess${string & Property}`, 'canAccessadminPanel'>]-?: boolean;
-}
-
-type UserAccess2 = ModifierToAccess<UserRoles>;
-
-
-type UserAccess1 = {
-	customers?: boolean,
-	projects?: boolean,
-	adminPanel?: boolean,
+const a2: ResponseT = {
+	result: 'httpSuccess'
 }
