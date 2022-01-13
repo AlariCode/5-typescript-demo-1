@@ -1,17 +1,21 @@
-class User {
-	constructor(public id: number, public name: string) { }
+type A = Awaited<Promise<string>>;
+type A2 = Awaited<Promise<Promise<string>>>;
+
+interface IMenu {
+	name: string;
+	url: string;
 }
 
-function getData(id: number): User {
-	return new User(id, 'Вася');
+async function getMenu(): Promise<IMenu[]> {
+	return [{ name: 'Аналитика', url: 'analytics' }];
 }
 
-type RT = ReturnType<typeof getData>;
-type RT2 = ReturnType<() => void>;
-type RT3 = ReturnType<<T>() => T>;
-type RT4 = ReturnType<<T extends string>() => T>;
+type R = Awaited<ReturnType<typeof getMenu>>;
 
-type PT = Parameters<typeof getData>[0];
+async function getArray<T>(x: T): Promise<Awaited<T>[]> {
+	return [await x];
+}
 
-type CP = ConstructorParameters<typeof User>;
-type IT = InstanceType<typeof User>;
+async function getArray2<T>(x: T): Promise<T[]> {
+	return [await x];
+}
