@@ -4,27 +4,40 @@ interface IUserService {
 }
 
 class UserService implements IUserService {
-	users: number = 1000;
+	@Max(100)
+	users: number;
 
-	@Log()
 	getUsersInDatabase(): number {
 		throw new Error('Ошибка');
 	}
 }
 
-function Log() {
+function Max(max: number) {
 	return (
 		target: Object,
-		propertyKey: string | symbol,
-		descriptor: TypedPropertyDescriptor<(...args: any[]) => any>
-	): TypedPropertyDescriptor<(...args: any[]) => any> | void => {
-		console.log(target);
-		console.log(propertyKey);
-		console.log(descriptor);
-		descriptor.value = () => {
-			console.log('no error');
+		propertyKey: string | symbol
+	) => {
+		let value: number;
+		const setter = function (newValue: number) {
+			if (newValue > max) {
+				console.log(`Нельзя установить значение больше ${max}`);
+			} else {
+				value = newValue;
+			}
 		}
+
+		const getter = function () {
+			return value;
+		}
+
+		Object.defineProperty(target, propertyKey, {
+			set: setter,
+			get: getter
+		});
 	}
 }
-
-console.log(new UserService().getUsersInDatabase());
+const userService = new UserService();
+userService.users = 1;
+console.log(userService.users);
+userService.users = 1000;
+console.log(userService.users);
