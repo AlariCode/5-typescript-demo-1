@@ -6,35 +6,28 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 class UserService {
+    set users(num) {
+        this._users = num;
+    }
+    get users() {
+        return this._users;
+    }
     getUsersInDatabase() {
         throw new Error('Ошибка');
     }
 }
 __decorate([
-    Max(100)
-], UserService.prototype, "users", void 0);
-function Max(max) {
-    return (target, propertyKey) => {
-        let value;
-        const setter = function (newValue) {
-            if (newValue > max) {
-                console.log(`Нельзя установить значение больше ${max}`);
-            }
-            else {
-                value = newValue;
-            }
+    Log()
+], UserService.prototype, "users", null);
+function Log() {
+    return (target, _, descriptor) => {
+        const set = descriptor.set;
+        descriptor.set = (...args) => {
+            console.log(args);
+            set === null || set === void 0 ? void 0 : set.apply(target, args);
         };
-        const getter = function () {
-            return value;
-        };
-        Object.defineProperty(target, propertyKey, {
-            set: setter,
-            get: getter
-        });
     };
 }
 const userService = new UserService();
 userService.users = 1;
-console.log(userService.users);
-userService.users = 1000;
 console.log(userService.users);
