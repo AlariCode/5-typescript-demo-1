@@ -11,50 +11,47 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-require("reflect-metadata");
-const POSITIVE_METADATA_KEY = Symbol('POSITIVE_METADATA_KEY');
-class UserService {
-    getUsersInDatabase() {
-        return this._users;
-    }
-    setUsersInDatabase(num) {
-        this._users = num;
-    }
+function Uni(name) {
+    console.log(`Инициализация: ${name}`);
+    return function () {
+        console.log(`Вызов: ${name}`);
+    };
 }
+let MyClass = class MyClass {
+    constructor(_) {
+    }
+    method(_) { }
+    static method2(_) { }
+};
 __decorate([
-    Validate(),
-    __param(0, Positive()),
+    Uni('Метод'),
+    __param(0, Uni('Параметр метода')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
-], UserService.prototype, "setUsersInDatabase", null);
-function Positive() {
-    return (target, propertyKey, parameterIndex) => {
-        console.log(Reflect.getOwnMetadata('design:type', target, propertyKey));
-        console.log(Reflect.getOwnMetadata('design:paramtypes', target, propertyKey));
-        console.log(Reflect.getOwnMetadata('design:returntype', target, propertyKey));
-        let existParams = Reflect.getOwnMetadata(POSITIVE_METADATA_KEY, target, propertyKey) || [];
-        existParams.push(parameterIndex);
-        Reflect.defineMetadata(POSITIVE_METADATA_KEY, existParams, target, propertyKey);
-    };
-}
-function Validate() {
-    return (target, propertyKey, descriptor) => {
-        let method = descriptor.value;
-        descriptor.value = function (...args) {
-            let positiveParams = Reflect.getOwnMetadata(POSITIVE_METADATA_KEY, target, propertyKey);
-            if (positiveParams) {
-                for (let index of positiveParams) {
-                    if (args[index] < 0) {
-                        throw new Error('Число должно быть больше нуля');
-                    }
-                }
-            }
-            return method === null || method === void 0 ? void 0 : method.apply(this, args);
-        };
-    };
-}
-const userService = new UserService();
-console.log(userService.setUsersInDatabase(10));
-console.log(userService.setUsersInDatabase(-1));
+], MyClass.prototype, "method", null);
+__decorate([
+    Uni('Свойство 3'),
+    __metadata("design:type", Object)
+], MyClass.prototype, "props3", void 0);
+__decorate([
+    Uni('Свойство 1'),
+    __metadata("design:type", Object)
+], MyClass.prototype, "props", void 0);
+__decorate([
+    Uni('Свойство static'),
+    __metadata("design:type", Object)
+], MyClass, "prop2", void 0);
+__decorate([
+    Uni('Метод static'),
+    __param(0, Uni('Параметр метода static')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], MyClass, "method2", null);
+MyClass = __decorate([
+    Uni('Класс1'),
+    Uni('Класс2'),
+    __param(0, Uni('Параметр конструктора')),
+    __metadata("design:paramtypes", [Object])
+], MyClass);
