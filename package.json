@@ -1,25 +1,26 @@
 {
-  "name": "5-typescript-demo-1",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AlariCode/5-typescript-demo-1.git"
-  },
-  "author": "Anton Larichev",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/AlariCode/5-typescript-demo-1/issues"
-  },
-  "homepage": "https://github.com/AlariCode/5-typescript-demo-1#readme",
-  "dependencies": {
-    "reflect-metadata": "^0.1.13"
-  }
+	"name": "5-typescript-demo-1",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"directories": {
+		"test": "test"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/AlariCode/5-typescript-demo-1.git"
+	},
+	"author": "Anton Larichev",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/AlariCode/5-typescript-demo-1/issues"
+	},
+	"homepage": "https://github.com/AlariCode/5-typescript-demo-1#readme",
+	"dependencies": {
+		"reflect-metadata": "^0.1.13"
+	}
 }

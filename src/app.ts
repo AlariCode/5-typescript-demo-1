@@ -1,2 +1,3 @@
-/// <reference path="./module/app2.ts" />
-console.log(A.a);
+import { a } from './module/app2.js';
+
+console.log(a);
