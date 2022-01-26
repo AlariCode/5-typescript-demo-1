@@ -20,6 +20,7 @@
 	},
 	"homepage": "https://github.com/AlariCode/5-typescript-demo-1#readme",
 	"dependencies": {
+		"really-relaxed-json": "^0.3.1",
 		"reflect-metadata": "^0.1.13"
 	}
 }
