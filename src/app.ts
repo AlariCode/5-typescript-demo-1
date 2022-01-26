@@ -1,72 +1,37 @@
-interface IInsurance {
-	id: number;
-	status: string;
-	setVehicle(vehicle: any): void;
-	submit(): Promise<boolean>;
-}
+class MyMap {
+	private static instance: MyMap;
 
-class TFInsurance implements IInsurance {
-	id: number;
-	status: string;
-	private vehicle: any;
+	map: Map<number, string> = new Map();
 
-	setVehicle(vehicle: any): void {
-		this.vehicle = vehicle;
+	private constructor() { }
+
+	clean() {
+		this.map = new Map();
 	}
 
-	async submit(): Promise<boolean> {
-		const res = await fetch('',
-			{
-				method: 'POST',
-				body: JSON.stringify({ vehicle: this.vehicle })
-			});
-		const data = await res.json();
-		return data.isSuccess;
+	public static get(): MyMap {
+		if (!MyMap.instance) {
+			MyMap.instance = new MyMap();
+		}
+		return MyMap.instance;
 	}
 }
 
-class ABInsurance implements IInsurance {
-	id: number;
-	status: string;
-	private vehicle: any;
-
-	setVehicle(vehicle: any): void {
-		this.vehicle = vehicle;
-	}
-
-	async submit(): Promise<boolean> {
-		const res = await fetch('ab',
-			{
-				method: 'POST',
-				body: JSON.stringify({ vehicle: this.vehicle })
-			});
-		const data = await res.json();
-		return data.yes;
+class Service1 {
+	addMap(key: number, value: string) {
+		const myMap = MyMap.get();
+		myMap.map.set(key, value);
 	}
 }
 
-abstract class InsuranceFactory {
-	db: any;
-
-	abstract createInsurance(): IInsurance;
-
-	saveHistory(ins: IInsurance) {
-		this.db.save(ins.id, ins.status);
+class Service2 {
+	getKeys(key: number) {
+		const myMap = MyMap.get();
+		console.log(myMap.map.get(key));
+		myMap.clean();
+		console.log(myMap.map.get(key));
 	}
 }
 
-class TFInsuranceFactory extends InsuranceFactory {
-	createInsurance(): TFInsurance {
-		return new TFInsurance();
-	}
-}
-
-class ABInsuranceFactory extends InsuranceFactory {
-	createInsurance(): ABInsurance {
-		return new ABInsurance();
-	}
-}
-
-const tfInsuranceFactory = new TFInsuranceFactory();
-const ins = tfInsuranceFactory.createInsurance();
-tfInsuranceFactory.saveHistory(ins);
+new Service1().addMap(1, 'Работает!');
+new Service2().getKeys(1);
