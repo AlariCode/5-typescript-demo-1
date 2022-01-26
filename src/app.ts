@@ -1,37 +1,24 @@
-class MyMap {
-	private static instance: MyMap;
+interface Prototype<T> {
+	clone(): T;
+}
 
-	map: Map<number, string> = new Map();
+class UserHistory implements Prototype<UserHistory> {
+	createdAt: Date;
 
-	private constructor() { }
-
-	clean() {
-		this.map = new Map();
+	constructor(public email: string, public name: string) {
+		this.createdAt = new Date();
 	}
 
-	public static get(): MyMap {
-		if (!MyMap.instance) {
-			MyMap.instance = new MyMap();
-		}
-		return MyMap.instance;
+	clone(): UserHistory {
+		let target = new UserHistory(this.email, this.name);
+		target.createdAt = this.createdAt;
+		return target;
 	}
 }
 
-class Service1 {
-	addMap(key: number, value: string) {
-		const myMap = MyMap.get();
-		myMap.map.set(key, value);
-	}
-}
-
-class Service2 {
-	getKeys(key: number) {
-		const myMap = MyMap.get();
-		console.log(myMap.map.get(key));
-		myMap.clean();
-		console.log(myMap.map.get(key));
-	}
-}
-
-new Service1().addMap(1, 'Работает!');
-new Service2().getKeys(1);
+let user = new UserHistory('a@a.ru', 'Антон');
+console.log(user);
+let user2 = user.clone();
+user2.email = 'b@b.ru'
+console.log(user2);
+console.log(user);
