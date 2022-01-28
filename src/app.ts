@@ -1,33 +1,52 @@
-interface IPaymentAPI {
-	getPaymentDetail(id: number): IPaymentDetail | undefined;
+abstract class DeliveryItem {
+	items: DeliveryItem[] = [];
+
+	addItem(item: DeliveryItem) {
+		this.items.push(item);
+	}
+
+	getItemPrices(): number {
+		return this.items.reduce((acc: number, i: DeliveryItem) => acc += i.getPrice(), 0)
+	}
+
+	abstract getPrice(): number;
 }
 
-interface IPaymentDetail {
-	id: number;
-	sum: number;
-}
+export class DeliveryShop extends DeliveryItem {
+	constructor(private deliveryFee: number) {
+		super();
+	}
 
-class PaymentAPI implements IPaymentAPI {
-	private data = [{ id: 1, sum: 10000 }];
-	getPaymentDetail(id: number): IPaymentDetail | undefined {
-		return this.data.find(d => d.id === id);
+	getPrice(): number {
+		return this.getItemPrices() + this.deliveryFee;
 	}
 }
 
-class PaymentAccessProxy implements IPaymentAPI {
-	constructor(private api: PaymentAPI, private userId: number) { }
-
-	getPaymentDetail(id: number): IPaymentDetail | undefined {
-		if (this.userId === 1) {
-			return this.api.getPaymentDetail(id)
-		}
-		console.log('Попытка получить данные платежа!');
-		return undefined;
+export class Package extends DeliveryItem {
+	getPrice(): number {
+		return this.getItemPrices();
 	}
 }
 
-const proxy = new PaymentAccessProxy(new PaymentAPI(), 1);
-console.log(proxy.getPaymentDetail(1));
+export class Product extends DeliveryItem {
+	constructor(private price: number) {
+		super();
+	}
+	getPrice(): number {
+		return this.price;
+	}
+}
 
-const proxy2 = new PaymentAccessProxy(new PaymentAPI(), 2);
-console.log(proxy2.getPaymentDetail(1));
+const shop = new DeliveryShop(100);
+shop.addItem(new Product(1000));
+
+const pack1 = new Package()
+pack1.addItem(new Product(200));
+pack1.addItem(new Product(300));
+shop.addItem(pack1);
+
+const pack2 = new Package()
+pack2.addItem(new Product(30));
+shop.addItem(pack2);
+
+console.log(shop.getPrice());
