@@ -1,50 +1,45 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Product = exports.Package = exports.DeliveryShop = void 0;
-class DeliveryItem {
-    constructor() {
-        this.items = [];
+class AbstractMiddleware {
+    next(mid) {
+        this.nextMiddleware = mid;
+        return mid;
     }
-    addItem(item) {
-        this.items.push(item);
-    }
-    getItemPrices() {
-        return this.items.reduce((acc, i) => acc += i.getPrice(), 0);
-    }
-}
-class DeliveryShop extends DeliveryItem {
-    constructor(deliveryFee) {
-        super();
-        this.deliveryFee = deliveryFee;
-    }
-    getPrice() {
-        return this.getItemPrices() + this.deliveryFee;
+    handle(request) {
+        if (this.nextMiddleware) {
+            return this.nextMiddleware.handle(request);
+        }
+        return;
     }
 }
-exports.DeliveryShop = DeliveryShop;
-class Package extends DeliveryItem {
-    getPrice() {
-        return this.getItemPrices();
+class AuthMiddleware extends AbstractMiddleware {
+    handle(request) {
+        console.log('AuthMiddleware');
+        if (request.userId === 1) {
+            return super.handle(request);
+        }
+        return { error: 'Вы не авторизованы' };
     }
 }
-exports.Package = Package;
-class Product extends DeliveryItem {
-    constructor(price) {
-        super();
-        this.price = price;
-    }
-    getPrice() {
-        return this.price;
+class ValidateMiddleware extends AbstractMiddleware {
+    handle(request) {
+        console.log('ValidateMiddleware');
+        if (request.body) {
+            return super.handle(request);
+        }
+        return { error: 'Нет body' };
     }
 }
-exports.Product = Product;
-const shop = new DeliveryShop(100);
-shop.addItem(new Product(1000));
-const pack1 = new Package();
-pack1.addItem(new Product(200));
-pack1.addItem(new Product(300));
-shop.addItem(pack1);
-const pack2 = new Package();
-pack2.addItem(new Product(30));
-shop.addItem(pack2);
-console.log(shop.getPrice());
+class Controller extends AbstractMiddleware {
+    handle(request) {
+        console.log('Controller');
+        return { success: request };
+    }
+}
+const controller = new Controller();
+const validate = new ValidateMiddleware();
+const auth = new AuthMiddleware();
+auth.next(validate).next(controller);
+console.log(auth.handle({
+    userId: 1,
+    body: 'I am OK!'
+}));
