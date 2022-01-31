@@ -1,58 +1,57 @@
-interface IMiddleware {
-	next(mid: IMiddleware): IMiddleware;
-	handle(request: any): any;
+interface Mediator {
+	notify(sender: string, event: string): void;
 }
 
-abstract class AbstractMiddleware implements IMiddleware {
-	private nextMiddleware: IMiddleware;
-
-	next(mid: IMiddleware): IMiddleware {
-		this.nextMiddleware = mid;
-		return mid;
+abstract class Mediated {
+	mediator: Mediator;
+	setMediator(mediator: Mediator) {
+		this.mediator = mediator;
 	}
+}
 
-	handle(request: any) {
-		if (this.nextMiddleware) {
-			return this.nextMiddleware.handle(request);
+class Notifications {
+	send() {
+		console.log('Отправляю уведомление');
+	}
+}
+
+class Log {
+	log(message: string) {
+		console.log(message);
+	}
+}
+
+class EventHandler extends Mediated {
+	myEvent() {
+		this.mediator.notify('EventHandler', 'myEvent');
+	}
+}
+
+class NotificationMediator implements Mediator {
+	constructor(
+		public notificaitons: Notifications,
+		public logger: Log,
+		public handler: EventHandler
+	) { }
+
+	notify(_: string, event: string): void {
+		switch (event) {
+			case 'myEvent':
+				this.notificaitons.send();
+				this.logger.log('Отправлено');
+				break;
 		}
-		return;
 	}
 }
 
-class AuthMiddleware extends AbstractMiddleware {
-	override handle(request: any) {
-		console.log('AuthMiddleware');
-		if (request.userId === 1) {
-			return super.handle(request);
-		}
-		return { error: 'Вы не авторизованы' };
-	}
-}
+const handler = new EventHandler();
+const logger = new Log();
+const notificaions = new Notifications();
 
-class ValidateMiddleware extends AbstractMiddleware {
-	override handle(request: any) {
-		console.log('ValidateMiddleware');
-		if (request.body) {
-			return super.handle(request);
-		}
-		return { error: 'Нет body' };
-	}
-}
-
-class Controller extends AbstractMiddleware {
-	override handle(request: any) {
-		console.log('Controller');
-		return { success: request };
-	}
-}
-
-const controller = new Controller();
-const validate = new ValidateMiddleware();
-const auth = new AuthMiddleware();
-
-auth.next(validate).next(controller);
-
-console.log(auth.handle({
-	userId: 1,
-	body: 'I am OK!'
-}));
+const m = new NotificationMediator(
+	notificaions,
+	logger,
+	handler
+);
+handler.setMediator(m);
+handler.myEvent();

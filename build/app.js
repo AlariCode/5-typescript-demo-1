@@ -1,45 +1,42 @@
 "use strict";
-class AbstractMiddleware {
-    next(mid) {
-        this.nextMiddleware = mid;
-        return mid;
+class Mediated {
+    setMediator(mediator) {
+        this.mediator = mediator;
     }
-    handle(request) {
-        if (this.nextMiddleware) {
-            return this.nextMiddleware.handle(request);
+}
+class Notifications {
+    send() {
+        console.log('Отправляю уведомление');
+    }
+}
+class Log {
+    log(message) {
+        console.log(message);
+    }
+}
+class EventHandler extends Mediated {
+    myEvent() {
+        this.mediator.notify('EventHandler', 'myEvent');
+    }
+}
+class NotificationMediator {
+    constructor(notificaitons, logger, handler) {
+        this.notificaitons = notificaitons;
+        this.logger = logger;
+        this.handler = handler;
+    }
+    notify(_, event) {
+        switch (event) {
+            case 'myEvent':
+                this.notificaitons.send();
+                this.logger.log('Отправлено');
+                break;
         }
-        return;
     }
 }
-class AuthMiddleware extends AbstractMiddleware {
-    handle(request) {
-        console.log('AuthMiddleware');
-        if (request.userId === 1) {
-            return super.handle(request);
-        }
-        return { error: 'Вы не авторизованы' };
-    }
-}
-class ValidateMiddleware extends AbstractMiddleware {
-    handle(request) {
-        console.log('ValidateMiddleware');
-        if (request.body) {
-            return super.handle(request);
-        }
-        return { error: 'Нет body' };
-    }
-}
-class Controller extends AbstractMiddleware {
-    handle(request) {
-        console.log('Controller');
-        return { success: request };
-    }
-}
-const controller = new Controller();
-const validate = new ValidateMiddleware();
-const auth = new AuthMiddleware();
-auth.next(validate).next(controller);
-console.log(auth.handle({
-    userId: 1,
-    body: 'I am OK!'
-}));
+const handler = new EventHandler();
+const logger = new Log();
+const notificaions = new Notifications();
+const m = new NotificationMediator(notificaions, logger, handler);
+handler.setMediator(m);
+handler.myEvent();
