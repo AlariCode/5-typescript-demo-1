@@ -1,57 +1,77 @@
-interface Mediator {
-	notify(sender: string, event: string): void;
+class User {
+	constructor(public userId: number) { }
 }
 
-abstract class Mediated {
-	mediator: Mediator;
-	setMediator(mediator: Mediator) {
-		this.mediator = mediator;
+class CommandHistory {
+	public commands: Command[] = [];
+	push(command: Command) {
+		this.commands.push(command);
+	}
+	remove(command: Command) {
+		this.commands = this.commands.filter(c => c.commandId !== command.commandId);
 	}
 }
 
-class Notifications {
-	send() {
-		console.log('Отправляю уведомление');
+abstract class Command {
+	public commandId: number;
+
+	abstract execute(): void;
+
+	constructor(public history: CommandHistory) {
+		this.commandId = Math.random();
 	}
 }
 
-class Log {
-	log(message: string) {
-		console.log(message);
-	}
-}
-
-class EventHandler extends Mediated {
-	myEvent() {
-		this.mediator.notify('EventHandler', 'myEvent');
-	}
-}
-
-class NotificationMediator implements Mediator {
+class AddUserCommand extends Command {
 	constructor(
-		public notificaitons: Notifications,
-		public logger: Log,
-		public handler: EventHandler
-	) { }
+		private user: User,
+		private receiver: UserService,
+		history: CommandHistory
+	) {
+		super(history);
+	}
 
-	notify(_: string, event: string): void {
-		switch (event) {
-			case 'myEvent':
-				this.notificaitons.send();
-				this.logger.log('Отправлено');
-				break;
-		}
+	execute(): void {
+		this.receiver.saveUser(this.user);
+		this.history.push(this);
+	}
+
+	undo() {
+		this.receiver.deleteUser(this.user.userId);
+		this.history.remove(this);
 	}
 }
 
-const handler = new EventHandler();
-const logger = new Log();
-const notificaions = new Notifications();
+class UserService {
+	saveUser(user: User) {
+		console.log(`Сохраняю пользователя с id ${user.userId}`);
+	}
+	deleteUser(userId: number) {
+		console.log(`Удаляем пользователя с id ${userId}`);
+	}
+}
 
-const m = new NotificationMediator(
-	notificaions,
-	logger,
-	handler
-);
-handler.setMediator(m);
-handler.myEvent();
+class Controller {
+	reveiver: UserService;
+	history: CommandHistory = new CommandHistory();
+
+	addReceiver(receiver: UserService) {
+		this.reveiver = receiver;
+	}
+
+	run() {
+		const addUserCommand = new AddUserCommand(
+			new User(1),
+			this.reveiver,
+			this.history
+		);
+		addUserCommand.execute();
+		console.log(addUserCommand.history);
+		addUserCommand.undo();
+		console.log(addUserCommand.history);
+	}
+}
+
+const controller = new Controller();
+controller.addReceiver(new UserService());
+controller.run();
