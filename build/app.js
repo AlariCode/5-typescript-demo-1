@@ -1,67 +1,37 @@
 "use strict";
-class Task {
-    constructor(priority) {
-        this.priority = priority;
+class Form {
+    constructor(name) {
+        this.name = name;
     }
 }
-class TaskList {
-    constructor() {
-        this.tasks = [];
+class SaveForm {
+    save(form) {
+        const res = this.fill(form);
+        this.log(res);
+        this.send(res);
     }
-    sortByPriority() {
-        this.tasks = this.tasks.sort((a, b) => {
-            if (a.priority > b.priority) {
-                return 1;
-            }
-            else if (a.priority == b.priority) {
-                return 0;
-            }
-            else {
-                return -1;
-            }
-        });
+    log(data) {
+        console.log(data);
     }
-    addTask(task) {
-        this.tasks.push(task);
+    ;
+}
+class FirstAPI extends SaveForm {
+    fill(form) {
+        return form.name;
     }
-    getTasks() {
-        return this.tasks;
-    }
-    count() {
-        return this.tasks.length;
-    }
-    getIterator() {
-        return new PriorityTaskItearator(this);
+    send(data) {
+        console.log(`Отправляю ${data}`);
     }
 }
-class PriorityTaskItearator {
-    constructor(taskList) {
-        this.position = 0;
-        taskList.sortByPriority();
-        this.taskList = taskList;
+class SecondAPI extends SaveForm {
+    fill(form) {
+        return { fio: form.name };
     }
-    current() {
-        return this.taskList.getTasks()[this.position];
-    }
-    next() {
-        this.position += 1;
-        return this.taskList.getTasks()[this.position];
-    }
-    prev() {
-        this.position -= 1;
-        return this.taskList.getTasks()[this.position];
-    }
-    index() {
-        return this.position;
+    send(data) {
+        console.log(`Отправляю ${data}`);
     }
 }
-const taskList = new TaskList();
-taskList.addTask(new Task(8));
-taskList.addTask(new Task(1));
-taskList.addTask(new Task(3));
-const iterator = taskList.getIterator();
-console.log(iterator.current());
-console.log(iterator.next());
-console.log(iterator.next());
-console.log(iterator.prev());
-console.log(iterator.index());
+const form1 = new FirstAPI();
+form1.save(new Form('Вася'));
+const form2 = new SecondAPI();
+form2.save(new Form('Вася'));
