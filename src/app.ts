@@ -1,41 +1,64 @@
-class Form {
-	constructor(public name: string) { }
+interface Observer {
+	update(subject: Subject): void;
 }
 
-abstract class SaveForm<T> {
-	public save(form: Form) {
-		const res = this.fill(form);
-		this.log(res);
-		this.send(res);
-	}
-
-	protected abstract fill(form: Form): T;
-	protected log(data: T): void {
-		console.log(data);
-	};
-	protected abstract send(data: T): void;
+interface Subject {
+	attach(observer: Observer): void
+	detach(observer: Observer): void
+	notify(): void;
 }
 
-class FirstAPI extends SaveForm<string> {
-	protected fill(form: Form): string {
-		return form.name;
+class Lead {
+	constructor(public name: string, public phone: string) { }
+}
+
+class NewLead implements Subject {
+	private observers: Observer[] = [];
+	public state: Lead;
+
+	attach(observer: Observer): void {
+		if (this.observers.includes(observer)) {
+			return;
+		}
+		this.observers.push(observer);
 	}
-	protected send(data: string): void {
-		console.log(`Отправляю ${data}`);
+	detach(observer: Observer): void {
+		const observerIndex = this.observers.indexOf(observer);
+		if (observerIndex == -1) {
+			return;
+		}
+		this.observers.splice(observerIndex, 1);
+	}
+
+	notify(): void {
+		for (const observer of this.observers) {
+			observer.update(this);
+		}
 	}
 }
 
-class SecondAPI extends SaveForm<{ fio: string }> {
-	protected fill(form: Form): { fio: string } {
-		return { fio: form.name };
-	}
-	protected send(data: { fio: string }): void {
-		console.log(`Отправляю ${data}`);
+class NotificationService implements Observer {
+	update(subject: Subject): void {
+		console.log(`NotificationService получил уведомление`);
+		console.log(subject);
 	}
 }
 
-const form1 = new FirstAPI();
-form1.save(new Form('Вася'));
+class LeadService implements Observer {
+	update(subject: Subject): void {
+		console.log(`LeadService получил уведомление`);
+		console.log(subject);
+	}
+}
 
-const form2 = new SecondAPI();
-form2.save(new Form('Вася'));
+const subject = new NewLead();
+subject.state = new Lead('Антон', '00000');
+const s1 = new NotificationService();
+const s2 = new LeadService();
+
+subject.attach(s1);
+subject.attach(s2);
+subject.notify();
+subject.detach(s1);
+subject.detach(s2);
+subject.notify();
